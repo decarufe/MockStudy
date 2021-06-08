@@ -17,14 +17,15 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    #- name: Restore dependencies
+    #  run: dotnet restore
+    #- name: Build
+    #  run: dotnet build --no-restore
+    - name: Test and cover
+      run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
     - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
+      uses: coverallsapp/github-action@master
       if: always()
       with:
-        files: test-results/**/*.xml
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./TestResults/coverage.info
