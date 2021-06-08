@@ -22,26 +22,17 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test with dotnet
-      run: dotnet test --logger trx --results-directory "TestResults"
+      run: dotnet test --logger trx --results-directory "TestResults" /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
     - name: Test Report
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: JEST Tests            # Name of the check run which will be created
+        name: Test Results
         path: TestResults/*.trx
         reporter: dotnet-trx
-    #- name: Upload dotnet test results
-    #  uses: actions/upload-artifact@v2
-    #  with:
-    #    name: dotnet-results
-    #    path: TestResults
-    #  # Use always() to always run this step to publish test results when there are test failures
-    #  if: always()
-    #- name: Test and cover
-    #  run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
-    #- name: Publish Unit Test Results
-    #  uses: coverallsapp/github-action@master
-    #  if: always()
-    #  with:
-    #    github-token: ${{ secrets.GITHUB_TOKEN }}
-    #    path-to-lcov: ./TestNSubstitute/TestResults/coverage.info
+    - name: Publish Unit Test Results
+      uses: coverallsapp/github-action@master
+      if: always()
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./TestNSubstitute/TestResults/coverage.info
