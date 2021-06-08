@@ -28,7 +28,7 @@ jobs:
       if: always()
       with:
         name: JEST Tests            # Name of the check run which will be created
-        path: Testresults/*.trx
+        path: TestResults/*.trx
         reporter: dotnet-trx
     #- name: Upload dotnet test results
     #  uses: actions/upload-artifact@v2
